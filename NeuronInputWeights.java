@@ -6,6 +6,15 @@ public class NeuronInputWeights {
     double dWeightElAlg;
     double dWeightReadComp;
 
+    @Override
+    public String toString() {
+        return "NeuronInputWeights{" +
+                "dWeightArith=" + dWeightArith +
+                ", dWeightElAlg=" + dWeightElAlg +
+                ", dWeightReadComp=" + dWeightReadComp +
+                '}';
+    }
+
     public NeuronInputWeights(double dWeightArith, double dWeightElAlg, double dWeightReadComp) {
         this.dWeightArith = dWeightArith;
         this.dWeightElAlg = dWeightElAlg;

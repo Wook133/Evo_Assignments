@@ -10,9 +10,14 @@ public class Neuron {
     NeuronInputs Z;
     NeuronInputWeights V;
     NeuronDesiredOutput t;
-    Double dtheta;
+    Double dtheta = 0.00000001;
     double dbias;//bias or threshold input
     Double dOut;
+    double dsigma = 0.000000001;
+
+    public NeuronInputWeights getV() {
+        return V;
+    }
 
     public Neuron(dataset ds)
     {
@@ -21,6 +26,16 @@ public class Neuron {
         this.dtheta     = 0.0;
         this.dbias      = 0.0;
         this.dOut       = 0.0;
+    }
+
+    public Neuron()
+    {
+
+    }
+    public void setNeuron(dataset ds)
+    {
+        this.Z = new NeuronInputs(ds);
+        this.t = new NeuronDesiredOutput(ds);
     }
 
     public Neuron(dataset ds, Double dtheta, double dbias, Double dOut) {
@@ -40,6 +55,11 @@ public class Neuron {
         this.dOut = dOut;
     }
 
+    public void setWeights(NeuronInputWeights niv)
+    {
+        this.V = new NeuronInputWeights(niv.getdWeightArith(), niv.getdWeightElAlg(), niv.getdWeightReadComp());
+    }
+
     /* public Neuron(ArrayList<Pair<Double, Double>> listInputWeightPairs) {
         this.listInputWeightPairs = listInputWeightPairs;
         dtheta = 0.0;
@@ -48,7 +68,7 @@ public class Neuron {
 
     public double NetSumWeightiXInputi()
     {
-      /*  double dAns = 0.0;
+      /**  double dAns = 0.0;
         for (int i = 0; i <= listInputWeightPairs.size() - 1; i++)
         {
             double dIni = listInputWeightPairs.get(i).getKey();
@@ -58,7 +78,7 @@ public class Neuron {
         }
         return dAns;*/
 
-      double dAns = (Z.getdArith()*V.getdWeightArith()) + (Z.getdElAlg()*V.getdWeightElAlg()) + (Z.getdReadComp()*V.getdWeightReadComp());
+      double dAns = (Z.getdArith()*V.getdWeightArith()) + (Z.getdElAlg()*V.getdWeightElAlg()) + (Z.getdReadComp()*V.getdWeightReadComp()) + (-1.0 * dtheta);
       return dAns;
     }
 
@@ -169,6 +189,26 @@ public class Neuron {
         double dExp = dNegNetS/dvar;
         double dans = Math.exp(dExp);
         return dans;
+    }
+
+    public double EpStep()
+    {
+        double dans = this.t.getdActualMark() - StepActivationFunction();
+        return Math.pow(dans, 2);
+    }
+
+    public void updateWeights(/*double t*/)
+    {
+        //double tp = BiPolarStepActivationFunction();
+        double tp = NetSumWeightiXInputi();
+        //tp = NetMultiplicativeWeightiXInputi();
+        double dDeriv = (-2.0)*(tp - this.t.getdActualMark());
+        double dNewWRC = V.getdWeightReadComp() * (tp - 1) + (dsigma*dDeriv);
+        double dNewWA = V.getdWeightArith() * (tp - 1) + (dsigma*dDeriv);
+        double dNewWEA = V.getdWeightElAlg() * (tp - 1) + (dsigma*dDeriv);
+        V.setdWeightArith(dNewWA);
+        V.setdWeightElAlg(dNewWEA);
+        V.setdWeightReadComp(dNewWRC);
     }
 
 
