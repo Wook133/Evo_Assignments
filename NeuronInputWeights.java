@@ -8,10 +8,10 @@ public class NeuronInputWeights {
 
     @Override
     public String toString() {
-        return "NeuronInputWeights{" +
-                "dWeightArith=" + dWeightArith +
-                ", dWeightElAlg=" + dWeightElAlg +
-                ", dWeightReadComp=" + dWeightReadComp +
+        return "NIW{" +
+                "Arith=" + dWeightArith +
+                ", ElAlg=" + dWeightElAlg +
+                ", ReadComp=" + dWeightReadComp +
                 '}';
     }
 

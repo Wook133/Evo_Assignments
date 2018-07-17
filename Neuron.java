@@ -10,10 +10,11 @@ public class Neuron {
     NeuronInputs Z;
     NeuronInputWeights V;
     NeuronDesiredOutput t;
-    Double dtheta = 0.00000001;
+    NeuronDesiredOutput tprev = new NeuronDesiredOutput(0);
+    Double dtheta = 0.00000000000001;
     double dbias;//bias or threshold input
     Double dOut;
-    double dsigma = 0.000000001;
+    double dsigma = 0.000000000000005;
 
     public NeuronInputWeights getV() {
         return V;
@@ -35,6 +36,7 @@ public class Neuron {
     public void setNeuron(dataset ds)
     {
         this.Z = new NeuronInputs(ds);
+//        tprev.setdActualMark(this.t.getdActualMark());
         this.t = new NeuronDesiredOutput(ds);
     }
 
@@ -199,17 +201,43 @@ public class Neuron {
 
     public void updateWeights(/*double t*/)
     {
+        System.out.println("Objective Mark"+this.t.getdActualMark());
         //double tp = BiPolarStepActivationFunction();
-        double tp = NetSumWeightiXInputi();
+        //double tp = NetSumWeightiXInputi();
         //tp = NetMultiplicativeWeightiXInputi();
-        double dDeriv = (-2.0)*(tp - this.t.getdActualMark());
+       /* double dDeriv = (-2.0)*(this.t.getdActualMark() - tp);
         double dNewWRC = V.getdWeightReadComp() * (tp - 1) + (dsigma*dDeriv);
         double dNewWA = V.getdWeightArith() * (tp - 1) + (dsigma*dDeriv);
         double dNewWEA = V.getdWeightElAlg() * (tp - 1) + (dsigma*dDeriv);
-        V.setdWeightArith(dNewWA);
-        V.setdWeightElAlg(dNewWEA);
-        V.setdWeightReadComp(dNewWRC);
+        V.setdWeightArith((V.getdWeightArith()*this.t.getdActualMark()) - dNewWA);
+        V.setdWeightElAlg((V.getdWeightElAlg()*this.t.getdActualMark()) - dNewWEA);
+        V.setdWeightReadComp((V.getdWeightReadComp()*this.t.getdActualMark()) - dNewWRC);*/
+
+        double yp = NetSumWeightiXInputi() ;//*BiPolarStepActivationFunction();
+        double tp = this.t.getdActualMark();
+        double dfirst = (-2.0)*(tp-yp);
+        double derivateWRC = dsigma*Z.getdReadComp();// V.getdWeightReadComp();
+        double dwrc = (V.getdWeightReadComp()*tp) - (dfirst * derivateWRC);
+        V.setdWeightReadComp(dwrc);
+
+        double derivateWEA = Z.getdElAlg();// V.getdWeightElAlg();
+        double dwea = (V.getdWeightElAlg()*tp) - (dfirst * derivateWEA);
+        V.setdWeightElAlg(dwea);
+
+        double derivateWA = Z.getdArith();// V.getdWeightArith();
+        double dwa = (V.getdWeightArith()*tp) - (dfirst * derivateWA);
+        V.setdWeightArith(dwa);
+
     }
+
+    public void updateWeightsWidrowHoff()
+    {
+        double yp = NetSumWeightiXInputi() ;
+        double first =V.getdWeightReadComp() * (this.tprev.getdActualMark());
+        //double second = 2.0* dsigma*(this.t.getdActualMark()-)
+        //V.setdWeightReadComp();
+    }
+
 
 
 
