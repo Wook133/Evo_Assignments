@@ -5,7 +5,7 @@ public class Neuron2
     NeuronInputs Z;
     public NeuronDesiredOutput tp;
     NeuronInputWeights W;
-    double NeuronBias = 0.0001;//theta
+    double NeuronBias = 0.000001;//theta
 
     public NeuronInputWeights getW() {
         return W;
@@ -45,20 +45,64 @@ public class Neuron2
         double yp = sigmoidYP();
         //System.out.println(tp.getdActualMark() + " : " + net());
         double w1 = W.getdWeightArith();
-
-        double dw1 = w1 - ((0.00015)*(-2.0*(tp.getdActualMark()-yp)*yp*(1-yp)*Z.getdArith()));
+//0.000015
+        //0.00003
+        //0.000075
+        double dw1 = w1 - ((0.000075)*(-2.0*(tp.getdActualMark()-yp)*yp*(1-yp)*Z.getdArith()));
         W.setdWeightArith(dw1);
         double w2 = W.getdWeightElAlg();
-        dw1 = w2 - ((0.00015)*(-2.0*(tp.getdActualMark()-yp)*yp*(1-yp)*Z.getdElAlg()));
+        dw1 = w2 - ((0.000075)*(-2.0*(tp.getdActualMark()-yp)*yp*(1-yp)*Z.getdElAlg()));
         W.setdWeightElAlg(dw1);
         double w3 = W.getdWeightReadComp();
-        dw1 = w3 - ((0.00015)*(-2.0*(tp.getdActualMark()-yp)*yp*(1-yp)*Z.getdReadComp()));
+        dw1 = w3 - ((0.000075)*(-2.0*(tp.getdActualMark()-yp)*yp*(1-yp)*Z.getdReadComp()));
         W.setdWeightReadComp(dw1);
 
 
 
 
     }
+
+
+    /*
+    public static void main(String[] args) throws Exception {
+        ArrayList<dataset> listDS = readCSV.readfile("Streamdata.csv");
+        Random rnd = new Random();
+        ArrayList<dataset> listIn = new ArrayList<>();
+        for (int i = 0; i <= 60; i++)
+        {
+
+            listIn.add(listDS.get(i));
+        }
+
+        double dw1 = rnd.nextDouble()/100000.0;
+        double dw2 = rnd.nextDouble()/100000.0;
+        double dw3 = rnd.nextDouble()/100000.0;
+        NeuronInputWeights niw = new NeuronInputWeights(dw1,dw2,dw3);
+        System.out.println(niw.toString());
+        Neuron2 singleNeuron = new Neuron2();
+        singleNeuron.setWeights(niw);
+        ArrayList<Double> derror = new ArrayList<>();
+        double dSumError = Double.MAX_VALUE;
+        while (dSumError > 10000)
+        {
+            dSumError = 0.0;
+            for (dataset ds : listIn)
+            {
+                singleNeuron.setNeuron(ds);
+                singleNeuron.updateWeights();
+
+                double de = singleNeuron.tp.getdActualMark()  - singleNeuron.net();
+                derror.add(Math.pow(de, 2));
+            }
+            for (Double dcur : derror)
+            {
+                dSumError = dSumError + dcur;
+            }
+            System.out.println(singleNeuron.getW().toString());
+            System.out.println("SSE: " + dSumError);
+            derror = new ArrayList<>();
+        }
+     */
 
 
 
