@@ -51,7 +51,7 @@ public class Neuron {
     public Neuron(dataset ds, Double dtheta, double dbias, Double dOut, NeuronInputWeights niv) {
         this.Z = new NeuronInputs(ds);
         this.t = new NeuronDesiredOutput(ds);
-        this.V = new NeuronInputWeights(niv.getdWeightArith(), niv.getdWeightElAlg(), niv.getdWeightReadComp());
+        this.V = new NeuronInputWeights(niv.getdWeightArith(), niv.getdWeightElAlg(), niv.getdWeightReadComp(), niv.getdWeightBias());
         this.dtheta = dtheta;
         this.dbias = dbias;
         this.dOut = dOut;
@@ -59,7 +59,7 @@ public class Neuron {
 
     public void setWeights(NeuronInputWeights niv)
     {
-        this.V = new NeuronInputWeights(niv.getdWeightArith(), niv.getdWeightElAlg(), niv.getdWeightReadComp());
+        this.V = new NeuronInputWeights(niv.getdWeightArith(), niv.getdWeightElAlg(), niv.getdWeightReadComp(), niv.getdWeightBias());
     }
 
     /* public Neuron(ArrayList<Pair<Double, Double>> listInputWeightPairs) {

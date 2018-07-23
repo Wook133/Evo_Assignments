@@ -5,20 +5,30 @@ public class NeuronInputWeights {
     double dWeightArith;
     double dWeightElAlg;
     double dWeightReadComp;
-
+    double dWeightBias;
     @Override
     public String toString() {
         return "NIW{" +
                 "Arith=" + dWeightArith +
                 ", ElAlg=" + dWeightElAlg +
                 ", ReadComp=" + dWeightReadComp +
+                ", Bias=" + dWeightBias +
                 '}';
     }
 
-    public NeuronInputWeights(double dWeightArith, double dWeightElAlg, double dWeightReadComp) {
+    public NeuronInputWeights(double dWeightArith, double dWeightElAlg, double dWeightReadComp, double dWeightBias) {
         this.dWeightArith = dWeightArith;
         this.dWeightElAlg = dWeightElAlg;
         this.dWeightReadComp = dWeightReadComp;
+        this.dWeightBias = dWeightBias;
+    }
+
+    public double getdWeightBias() {
+        return dWeightBias;
+    }
+
+    public void setdWeightBias(double dWeightBias) {
+        this.dWeightBias = dWeightBias;
     }
 
     public double getdWeightArith() {

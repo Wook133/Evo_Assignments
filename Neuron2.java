@@ -5,7 +5,8 @@ public class Neuron2
     NeuronInputs Z;
     public NeuronDesiredOutput tp;
     NeuronInputWeights W;
-    double NeuronBias = 0.000001;//theta
+    double NeuronBias = 0.00001;//theta
+
 
     public NeuronInputWeights getW() {
         return W;
@@ -23,12 +24,12 @@ public class Neuron2
 
     public void setWeights(NeuronInputWeights niv)
     {
-        this.W = new NeuronInputWeights(niv.getdWeightArith(), niv.getdWeightElAlg(), niv.getdWeightReadComp());
+        this.W = new NeuronInputWeights(niv.getdWeightArith(), niv.getdWeightElAlg(), niv.getdWeightReadComp(), niv.getdWeightBias());
     }
 
     public double net()
     {
-        double dAns = (Z.getdArith()*W.getdWeightArith()) + (Z.getdElAlg()*W.getdWeightElAlg()) + (Z.getdReadComp()*W.getdWeightReadComp()) - NeuronBias;
+        double dAns = (Z.getdArith()*W.getdWeightArith()) + (Z.getdElAlg()*W.getdWeightElAlg()) + (Z.getdReadComp()*W.getdWeightReadComp()) - (NeuronBias*W.getdWeightBias());
         return dAns;
     }
 
@@ -48,16 +49,18 @@ public class Neuron2
 //0.000015
         //0.00003
         //0.000075
-        double dw1 = w1 - ((0.000075)*(-2.0*(tp.getdActualMark()-yp)*yp*(1-yp)*Z.getdArith()));
+        //0.00014
+        double dw1 = w1 - ((0.00014)*(-2.0*(tp.getdActualMark()-yp)*yp*(1-yp)*Z.getdArith()));
         W.setdWeightArith(dw1);
         double w2 = W.getdWeightElAlg();
-        dw1 = w2 - ((0.000075)*(-2.0*(tp.getdActualMark()-yp)*yp*(1-yp)*Z.getdElAlg()));
+        dw1 = w2 - ((0.00014)*(-2.0*(tp.getdActualMark()-yp)*yp*(1-yp)*Z.getdElAlg()));
         W.setdWeightElAlg(dw1);
         double w3 = W.getdWeightReadComp();
-        dw1 = w3 - ((0.000075)*(-2.0*(tp.getdActualMark()-yp)*yp*(1-yp)*Z.getdReadComp()));
+        dw1 = w3 - ((0.00014)*(-2.0*(tp.getdActualMark()-yp)*yp*(1-yp)*Z.getdReadComp()));
         W.setdWeightReadComp(dw1);
-
-
+        double w4 = W.getdWeightBias();
+        dw1 = w4 - ((0.00014)*(-2.0*(tp.getdActualMark()-yp)*yp*(1-yp)*this.NeuronBias));
+        W.setdWeightBias(dw1);
 
 
     }
