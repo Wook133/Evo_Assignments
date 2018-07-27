@@ -40,7 +40,7 @@ public class Neuron2
         return 1/dDenomin;
     }
 
-    public void updateWeights()
+    public void updateWeights(double deta)
     {
 
         double yp = sigmoidYP();
@@ -50,19 +50,32 @@ public class Neuron2
         //0.00003
         //0.000075
         //0.00014
-        double dw1 = w1 - ((0.00014)*(-2.0*(tp.getdActualMark()-yp)*yp*(1-yp)*Z.getdArith()));
+        double dw1 = w1 - ((deta)*(-2.0*(tp.getdActualMark()-yp)*yp*(1-yp)*Z.getdArith()));
         W.setdWeightArith(dw1);
         double w2 = W.getdWeightElAlg();
-        dw1 = w2 - ((0.00014)*(-2.0*(tp.getdActualMark()-yp)*yp*(1-yp)*Z.getdElAlg()));
+        dw1 = w2 - ((deta)*(-2.0*(tp.getdActualMark()-yp)*yp*(1-yp)*Z.getdElAlg()));
         W.setdWeightElAlg(dw1);
         double w3 = W.getdWeightReadComp();
-        dw1 = w3 - ((0.00014)*(-2.0*(tp.getdActualMark()-yp)*yp*(1-yp)*Z.getdReadComp()));
+        dw1 = w3 - ((deta)*(-2.0*(tp.getdActualMark()-yp)*yp*(1-yp)*Z.getdReadComp()));
         W.setdWeightReadComp(dw1);
         double w4 = W.getdWeightBias();
-        dw1 = w4 - ((0.00014)*(-2.0*(tp.getdActualMark()-yp)*yp*(1-yp)*this.NeuronBias));
+        dw1 = w4 - ((deta)*(-2.0*(tp.getdActualMark()-yp)*yp*(1-yp)*this.NeuronBias));
         W.setdWeightBias(dw1);
 //13189.120873418888
+    }
 
+    /**
+     * Error Squared
+     * @param ichoice choose which activation function to use
+     * @param dother other variable to use if activation function requires it
+     * @return Error Squared for SSE
+     */
+    public double Error(int ichoice, double dother)
+    {
+        Double dError = 0.0;
+        double yp = sigmoidYP();
+        dError = Math.pow((tp.getdActualMark() - yp), 2);
+        return dError;
     }
 
 
