@@ -29,7 +29,7 @@ public class Neuron2
 
     public double net()
     {
-        double dAns = (Z.getdArith()*W.getdWeightArith()) + (Z.getdElAlg()*W.getdWeightElAlg()) + (Z.getdReadComp()*W.getdWeightReadComp()) - (NeuronBias*W.getdWeightBias());
+        double dAns = (Z.getdArith()*W.getdWeightArith()) + (Z.getdElAlg()*W.getdWeightElAlg()) + (Z.getdReadComp()*W.getdWeightReadComp()) + (NeuronBias*W.getdWeightBias());
         return dAns;
     }
 
@@ -61,7 +61,7 @@ public class Neuron2
         double w4 = W.getdWeightBias();
         dw1 = w4 - ((0.00014)*(-2.0*(tp.getdActualMark()-yp)*yp*(1-yp)*this.NeuronBias));
         W.setdWeightBias(dw1);
-
+//13189.120873418888
 
     }
 
