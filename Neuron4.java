@@ -1,17 +1,12 @@
 package deVilliers_214062813.Assignment1;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
-public class Neuron3
-{
-    //NeuronInputs Z;
-    //public NeuronDesiredOutput tp;
-    //NeuronInputWeights W;
-    //double NeuronBias = 0.00001;//theta
-
-    public Double[] Z = new Double[4]; // Input Patterns and last element is bias
-    public Double[] W = new Double[4]; // Weights and last element is bias weight
-    public Double Tp; //Actual Result
+public class Neuron4 {
+    public BigDecimal[] Z = new BigDecimal[4]; // Input Patterns and last element is bias
+    public BigDecimal[] W = new BigDecimal[4]; // Weights and last element is bias weight
+    public BigDecimal Tp; //Actual Result
 
     public boolean bForPrediction;
 
@@ -21,12 +16,12 @@ public class Neuron3
     @Override
     public String toString() {
         String sw ="";
-        for (Double d : W) {
+        for (BigDecimal d : W) {
             System.out.println(d);
             sw = sw + " : " + d;
         }
 
-            return "Neuron3{" +
+        return "Neuron3{" +
                 "Z=" + Z +
                 ", W=" + sw +
                 ", Tp=" + Tp +
@@ -39,7 +34,7 @@ public class Neuron3
      * @param dsCur
      * @param w
      */
-    public Neuron3(dataset dsCur, ArrayList<Double> w, Double dbias)
+    public Neuron4(datasetBD dsCur, ArrayList<BigDecimal> w, BigDecimal dbias)
     {
         Z[0] = dsCur.getDa();
         Z[1] = dsCur.getDe();
@@ -58,7 +53,7 @@ public class Neuron3
      * Used for Training, Rest, Same Neuron, updating Zs
      * @param dsCur
      */
-    public Neuron3(dataset dsCur)
+    public Neuron4(datasetBD dsCur)
     {
         Z[0] = dsCur.getDa();
         Z[1] = dsCur.getDe();
@@ -67,7 +62,7 @@ public class Neuron3
         bForPrediction = false;
     }
 
-    public void setZ(dataset dsCur)
+    public void setZ(datasetBD dsCur)
     {
         Z[0] = dsCur.getDa();
         Z[1] = dsCur.getDe();
@@ -76,39 +71,41 @@ public class Neuron3
         bForPrediction = false;
     }
 
-    public Double getTp() {
+    public BigDecimal getTp() {
         return Tp;
     }
 
-    public void setTp(Double tp) {
+    public void setTp(BigDecimal tp) {
         Tp = tp;
     }
 
     /**
      * @return sum of Zi * Wi for i's
      */
-    public Double net()
+    public BigDecimal net()
     {
         if (Z.length == W.length)//check Z and W same size
         {
-            Double dOut = 0.0;
+            BigDecimal dOut = BigDecimal.ZERO;
             for (int i = 0; i <= Z.length - 1; i++)
             {
-                dOut = dOut + Z[i]*W[i];
+                dOut = dOut.add(Z[i].multiply(W[i]));
             }
+            dOut = dOut.setScale(64, BigDecimal.ROUND_HALF_UP);
             return dOut;
         }
         else
-            return 0.0;
+            return BigDecimal.ZERO;
     }
 
     /**
      * @return Current y estimate using the Linear Activation function
      */
-    public double LinearActivationFunction(Double dLambda)
+    public BigDecimal LinearActivationFunction(BigDecimal dLambda)
     {
-        Double yp = 0.0;
-        yp = dLambda * (net() - Z[3]);
+        BigDecimal yp = BigDecimal.ZERO;
+        yp = dLambda.multiply(net().subtract(Z[3]));
+        yp= yp.setScale(64, BigDecimal.ROUND_HALF_UP);
         return yp;
     }
 
@@ -116,17 +113,17 @@ public class Neuron3
     /**
      * @return Current y estimate using the Sigmoid Activation function
      */
-    public double SigmoidActivationFunction()
+    public BigDecimal SigmoidActivationFunction()
     {
-        double dnet = net()*-1.0;
-        double dDenomin = 1 + Math.exp(dnet);
-        double dans = 1.0/dDenomin;
-        return dans;
+       /* BigDecimal dnet = net().multiply(BigDecimal.ONE.negate()) ;
+        BigDecimal dDenomin = 1 + Math.exp(dnet);
+        BigDecimal dans = 1.0/dDenomin;*/
+        return BigDecimal.ZERO;
     }
 
-    public void updateWeights(int ichoice, double dEta, double dOther)
+    public void updateWeights(int ichoice, BigDecimal dEta, BigDecimal dOther)
     {
-       // System.out.println("WeightinStart");
+        // System.out.println("WeightinStart");
         if (bForPrediction == false)
         {
             switch (ichoice) {
@@ -134,7 +131,9 @@ public class Neuron3
                 {
                     for (int i = 0; i <= W.length - 1; i++)
                     {
-                        double dWcur = W[i] - (dEta*(-2.0)*ErrorNotSquared(ichoice, dOther)*Z[i]);
+                        BigDecimal negative2 = BigDecimal.ONE.add(BigDecimal.ONE).negate();
+                        BigDecimal dWcur = W[i].subtract (dEta.multiply(negative2).multiply(ErrorNotSquared(ichoice, dOther)).multiply(Z[i]));
+                        dWcur = dWcur.setScale(64, BigDecimal.ROUND_HALF_UP);
                         W[i] = dWcur;
                     }
                 }
@@ -143,8 +142,8 @@ public class Neuron3
                 {
                     for (int i = 0; i <= W.length - 1; i++)
                     {
-                        double yp = SigmoidActivationFunction();
-                        double dWcur = W[i] - (dEta*(-2.0)*ErrorNotSquared(ichoice, dOther)*Z[i]*(1-yp)*yp);
+                        BigDecimal negative2 = BigDecimal.ONE.add(BigDecimal.ONE).negate();
+                        BigDecimal dWcur = W[i].subtract (dEta.multiply(negative2).multiply(ErrorNotSquared(ichoice, dOther)).multiply(Z[i]));
                         W[i] = dWcur;
                     }
                 }
@@ -160,27 +159,22 @@ public class Neuron3
      * @param dother other variable to use if activation function requires it
      * @return Error Squared for SSE
      */
-    public double ErrorNotSquared(int ichoice, double dother)
+    public BigDecimal ErrorNotSquared(int ichoice, BigDecimal dother)
     {
-        Double dError = 0.0;
+        BigDecimal dError = BigDecimal.ZERO;
         if (bForPrediction == false)// only able to find the error if Tp exists
         {
             switch (ichoice) {
                 case 0: {
-                    double yp = LinearActivationFunction(dother);
-                    dError = Tp - yp;
+                    BigDecimal yp = LinearActivationFunction(dother);
+                    dError = Tp.subtract(yp);
                 }
-                break;
-                case 1: {
-                    double yp = SigmoidActivationFunction();
-                    dError = Tp - yp;
-                }
-                break;
+                 break;
                 default:
-                    {
-                        double yp = SigmoidActivationFunction();
-                        dError = Tp - yp;
-                    }
+                {
+                    BigDecimal yp = LinearActivationFunction(dother);
+                    dError = Tp.subtract(yp);
+                }
             }
         }
         return dError;
@@ -192,44 +186,30 @@ public class Neuron3
      * @param dother other variable to use if activation function requires it
      * @return Error Squared for SSE
      */
-    public double Error(int ichoice, double dother)
+    public BigDecimal Error(int ichoice, BigDecimal dother)
     {
-        Double dError = 0.0;
+        BigDecimal dError = BigDecimal.ZERO;
         if (bForPrediction == false)// only able to find the error if Tp exists
         {
             switch (ichoice) {
                 case 0: {
-                    double yp = LinearActivationFunction(dother);
-                    Double dc = Tp - yp;
-                    dError = Math.pow(dc, 2);
-                }
-                break;
-                case 1: {
-                    double yp = SigmoidActivationFunction();
-
-                    Double dc = Tp - yp;
-                    //System.out.println("Yp = " + yp + " |||||||||| " + "TP = " + Tp);
-                    dError = Math.pow(dc, 2);
-
+                    BigDecimal yp = LinearActivationFunction(dother);
+                    BigDecimal dc = Tp.subtract(yp);
+                    dError = dc.pow(2);
                 }
                 break;
                 default:
                 {
-                    double yp = SigmoidActivationFunction();
-                    Double dc = Tp - yp;
-                    dError = Math.pow(dc, 2);
+                    BigDecimal yp = LinearActivationFunction(dother);
+                    BigDecimal dc = Tp.subtract(yp);
+                    dError = dc.pow(2);
                 }
             }
         }
+        dError = dError.setScale(64, BigDecimal.ROUND_HALF_UP);
 
         return dError;
     }
-
-
-
-
-
-
 
 
 }

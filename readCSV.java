@@ -6,6 +6,8 @@ import java.util.Scanner;
 
 public class readCSV
 {
+    private static final String NEW_LINE_SEPARATOR = "\n";
+
     public static ArrayList<dataset> readCSVFiletoArrayList(String sFileName) throws Exception
     {
         ArrayList<dataset> listData = new ArrayList<>();
@@ -69,7 +71,53 @@ public class readCSV
             e.printStackTrace();
         }
         return Marks;
-
-
     }
+
+    public static ArrayList<datasetBD> readfile2(String sfile)
+    {
+        ArrayList<datasetBD> Marks = new ArrayList<>();
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("Streamdata.csv"));
+            String line = null;
+            Scanner scanner = null;
+            int index = 0;
+            reader.readLine();
+            while ((line = reader.readLine()) != null)
+            {
+                scanner = new Scanner(line);
+                while (scanner.hasNext())
+                {
+                    String data = scanner.next();
+                    String[] ArrLine = data.split(",");
+                    datasetBD curDS = new datasetBD(ArrLine[0], ArrLine[1], ArrLine[2], ArrLine[3]);
+                    System.out.println(curDS.toString());
+                    Marks.add(curDS);
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return Marks;
+    }
+
+    public static void writeCsvFile(String fileName, Experiment e1) throws IOException {
+        FileWriter fileWriter = null;
+        try
+        {
+            fileWriter = new FileWriter(fileName, true);
+            //fileWriter.append(FILE_HEADER.toString());
+            fileWriter.append(NEW_LINE_SEPARATOR);
+            fileWriter.append(e1.print());
+            fileWriter.flush();
+            fileWriter.close();
+        }
+        catch (Exception e)
+        {
+            System.out.println(e);
+        }
+    }
+
+
 }
