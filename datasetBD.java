@@ -10,11 +10,14 @@ public class datasetBD {
     BigDecimal drc;
     BigDecimal dam;
 
+    /**
+     * Test if number
+     * @param dArith
+     * @param dEAlg
+     * @param dReadComp
+     * @param actualMark
+     */
     public datasetBD(String dArith, String dEAlg, String dReadComp, String actualMark) {
-       /* this.dArith = dArith;
-        this.dEAlg = dEAlg;
-        this.dReadComp = dReadComp;
-        this.ActualMark = actualMark;*/
         if (StringUtils.isNumeric(dArith))
         {
             this.da = new BigDecimal(dArith);

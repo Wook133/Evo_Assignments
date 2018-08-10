@@ -3,6 +3,9 @@ package deVilliers_214062813.Assignment1;
 import java.math.BigDecimal;
 import java.util.Arrays;
 
+/**
+ * Output for CSV file convenience
+ */
 public class Experiment {
     String[] InitialWeights = new String[4];
     String[] FinalWeights= new String[4];
